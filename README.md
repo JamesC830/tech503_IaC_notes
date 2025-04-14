@@ -5,6 +5,12 @@
 - ***Configuration files are created that contain your infrastructure specifications***, which makes it easier to edit and distribute configurations. It also ensures that you provision the same environment every time
 - ***Divide your infrastructure into modular components*** that can then be combined in different ways through automation
 
+**Configuration management and Orchistration**
+- ***Configuration management***: Automating the setup, maintenance, and consistency of infrastructure and software configurations across machines, environments, or systems
+- ***Orchistration***: Coordinating and automating multiple tasks, systems, or services to work together in a specific order or flow
+
+**Simply put**: If configuration management is about setting up individual servers, then orchestration is about managing how all those servers and services interact with each other across your whole infrastructure.
+
 ## Approaches:
 - ***Declarative***: 
   - ***Defines the desired state of the system***, including what resources you need and any properties they should have, and an IaC tool will configure it for you
@@ -29,5 +35,12 @@
 
 ## Tools:
 
-- **Ansible**: Open source IT automation engine that automates provisioning, configuration management, application deployment, orchestration, and many other IT processes
+- **Ansible**: Open source IT automation engine that automates provisioning, configuration management, application deployment, orchestration, and many other IT processes. Written in python. Works on Linux and Windows.
 - **Terraform**: Infrastructure as code tool that lets you define both cloud and on-prem resources in human-readable configuration files that you can version, reuse, and share. You can then use a consistent workflow to provision and manage all of your infrastructure throughout its lifecycle. Terraform can manage low-level components like compute, storage, and networking resources, as well as high-level components like DNS entries and SaaS features
+- ***Chef***: Configuration management tool
+- ***Puppet***: Configuration management tool
+- ***Saltstack****:
+
+Jargon:
+- Ad-hoc: 1 off command
+- Playbook: Recipe / Desired state (Written in YAML)
