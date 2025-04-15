@@ -4,6 +4,12 @@
   # Where do you want to install or run this play?
   hosts: db
 
+  vars:
+    mongodb_version: "7.0.6"
+    mongosh_version: "2.1.5"
+    mongo_repo_file: "/etc/apt/sources.list.d/mongodb-org-7.0.list"
+    gpg_key_path: "/usr/share/keyrings/mongodb-server-7.0.gpg"
+
   # Gather facts
   gather_facts: true
 
@@ -46,7 +52,7 @@
   - name: Add MongoDB APT repository
     copy:
       dest: "/etc/apt/sources.list.d/mongodb-org-7.0.list"
-      content: "deb [ arch=amd64,arm64 signed-by={{ gpg_key_path }} ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse\n"
+      content: "deb [ arch=amd64,arm64 signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse\n"
 
   # run apt update to update packages
   - name: update all packages
