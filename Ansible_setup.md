@@ -28,6 +28,10 @@ It helps automate repetitive tasks and ensure systems are set up and managed con
 
 <img src="https://www.liquidweb.com/wp-content/uploads/2024/03/image01-How-Ansible-Works-Rich-Media-min-957x1024-1.jpg" alt="alt text" width="300"/>
 
+- ***Playbook***: YAML file that defines a series of tasks to automate configuration, deployment, or orchestration on your infrastructure. 
+Unlike ad-hoc commands, which are one-liners for quick tasks, playbooks are structured, repeatable, and version-controllable. Used for managing complex systems or multiple steps
+- ***Inventory***: A file (or script) that defines the hosts and groups of hosts on which your Ansible playbooks or ad-hoc commands will run. Defines: which machines to connect to, how to connect to them (username, port, etc.) and how they are grouped
+
 ----
 # Ansible setup
 
@@ -194,3 +198,25 @@ sudo ansible web -m ansible.builtin.apt -a "upgrade=dist" --become
 You can control how many hosts Ansible configures in parallel using the ```forks``` setting in ```ansible.cfg```:
 - Default is 5.
 - Set it higher to make Ansible faster across many hosts.
+
+
+**Currently doesn't work**:
+
+File path wrong, or lack permissions
+
+***Copying the private key to the target instance***:
+```
+sudo ansible web -m ansible.builtin.copy -a "src=../.ssh/tech503-james-aws-key.pem dest=/home/ubuntu/.shh/tech503-james-aws-key.pem mode=0400" --become
+```
+- Mode: The permissions given to the copy of the private key
+
+***Deploying nginx on target node***:
+```
+#Install nginx
+sudo ansible web -i inventory.ini -m apt -a "name=nginx state=present update_cache=true" --become
+
+#Start and enable nginx
+sudo ansible web -i inventory.ini -m service -a "name=nginx state=started enabled=yes" --become
+
+#May still need to do port config
+```
