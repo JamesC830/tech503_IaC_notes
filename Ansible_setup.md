@@ -199,24 +199,24 @@ You can control how many hosts Ansible configures in parallel using the ```forks
 - Default is 5.
 - Set it higher to make Ansible faster across many hosts.
 
-
-**Currently doesn't work**:
-
-File path wrong, or lack permissions
-
 ***Copying the private key to the target instance***:
 ```
-sudo ansible web -m ansible.builtin.copy -a "src=../.ssh/tech503-james-aws-key.pem dest=/home/ubuntu/.shh/tech503-james-aws-key.pem mode=0400" --become
+#Navigate to .ssh folder
+cd
+cd .ssh
+
+#Copy the key to the target
+sudo ansible web -m ansible.builtin.copy -a "src=tech503-james-aws-key.pem dest=/home/ubuntu/tech503-james-aws-key.pem mode=0400" --become
 ```
 - Mode: The permissions given to the copy of the private key
 
 ***Deploying nginx on target node***:
 ```
 #Install nginx
-sudo ansible web -i inventory.ini -m apt -a "name=nginx state=present update_cache=true" --become
+sudo ansible web -m apt -a "name=nginx state=present update_cache=yes" -b
 
 #Start and enable nginx
-sudo ansible web -i inventory.ini -m service -a "name=nginx state=started enabled=yes" --become
+sudo ansible web -m systemd -a "name=nginx state=started enabled=yes" -b
 
 #May still need to do port config
 ```
