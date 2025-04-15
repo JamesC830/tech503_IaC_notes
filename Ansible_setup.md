@@ -201,12 +201,14 @@ You can control how many hosts Ansible configures in parallel using the ```forks
 
 ***Copying the private key to the target instance***:
 ```
-#Navigate to .ssh folder
-cd
-cd .ssh
+#Copy the key to the target (Don't use this one)
+sudo ansible web -m ansible.builtin.copy -a "src=/home/ubuntu/.ssh/tech503-james-aws-key.pem dest=/home/ubuntu/.ssh/tech503-james-aws-key.pem mode=0400" --become
 
-#Copy the key to the target
-sudo ansible web -m ansible.builtin.copy -a "src=tech503-james-aws-key.pem dest=/home/ubuntu/tech503-james-aws-key.pem mode=0400" --become
+#Alternative
+sudo ansible web -m ansible.builtin.copy -a "src=/home/ubuntu/.ssh/tech503-james-aws-key.pem dest=/home/ubuntu/.ssh/tech503-james-aws-key.pem"
+
+#Check it worked
+sudo ansible web -a "ls ~/.ssh"
 ```
 - Mode: The permissions given to the copy of the private key
 
@@ -220,3 +222,30 @@ sudo ansible web -m systemd -a "name=nginx state=started enabled=yes" -b
 
 #May still need to do port config
 ```
+
+## Playbooks
+
+[Documentation](https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_intro.html)
+
+In ansible.cfg file, add the below to the bottom:
+```host_key_checking = False```
+
+***Playbooks go in the ```/etc/ansible``` directory***
+
+***Running a playbook***:
+```sudo ansible-playbook <playbook-name> --become```
+
+Example output:
+![alt text](image.png)
+
+Check for syntax errors:
+```ansible-playbook --syntax-check <playbook-filename>```
+
+Dry run of playbook:
+```sudo ansible-playbook --check install_nginx_playbook.yml```
+
+
+
+
+
+

@@ -1,0 +1,76 @@
+---
+# Name of the play
+- name: Install app play
+  # Where do you want to install or run this play?
+  hosts: app
+
+  # Gather facts
+  gather_facts: true
+
+  # Provide admin(sudo) access to this playbook?
+  become: true
+
+  # Instructions - known as "tasks"
+  tasks:
+
+  # run apt update
+  - name: update all packages
+    ansible.builtin.apt:
+      update_cache: yes
+
+  # run apt upgrade
+  - name: upgrade packages
+    ansible.builtin.apt:
+      upgrade: dist
+
+  # ensure git is installed
+  - name: Ensure git is installed
+    apt:
+      name: git
+      state: present
+
+  # clone app repository
+  - name: clone github repo
+    git:
+      repo: "https://github.com/JamesC830/nodejs-sparta-test-app"
+      dest: "/home/ubuntu/nodejs-sparta-test-app"
+      update: yes
+
+  # Add and install nodejs
+  - name: Add Node.js 20.x repository and install Node.js
+    shell: |
+      curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+      apt-get install -y nodejs
+    args:
+      executable: /bin/bash
+
+  #Check node.js version
+  - name: Check Node.js version
+    command: node -v
+    register: node_version
+    changed_when: false
+
+  # Install npm
+  - name: Install npm
+    npm:
+      path: "/home/ubuntu/nodejs-sparta-test-app/app"
+      production: no
+
+  # Install pm2
+  - name: Install pm2 globally
+    npm:
+      name: pm2
+      global: yes
+
+  # pm2 kill
+  - name: Kill any running PM2 processes
+    command: pm2 kill
+    ignore_errors: true
+
+  # Start the app using pm2
+  - name: Start app using PM2
+    command: pm2 start app.js
+    args:
+      chdir: "/home/ubuntu/nodejs-sparta-test-app/app"
+
+

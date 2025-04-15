@@ -1,0 +1,30 @@
+---
+
+# Name of the play
+- name: Install nginx play
+  # Where do you want to install or run this play?
+  hosts: web
+
+  # Gather facts
+  gather_facts: true
+
+  # Provide admin(sudo) access to this playbook?
+  become: true
+
+  # Instructions - known as "tasks"
+  tasks:
+
+  # run apt update
+  - name: update all packages
+    ansible.builtin.apt:
+      update_cache: yes
+
+  # run apt upgrade
+  - name: upgrade packages
+    ansible.builtin.apt:
+      upgrade: dist
+
+  # install and run nginx
+  - name: install and run nginx web server on target node
+    # use package "nginx", need "state=present" means make sure pkg is present and installed
+    apt: pkg=nginx state=present

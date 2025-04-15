@@ -1,0 +1,80 @@
+---
+# Name of the play
+- name: Database setup play
+  # Where do you want to install or run this play?
+  hosts: db
+
+  # Gather facts
+  gather_facts: true
+
+  # Provide admin(sudo) access to this playbook?
+  become: true
+
+  # Instructions - known as "tasks"
+  tasks:
+
+  # run apt update
+  - name: update all packages
+    ansible.builtin.apt:
+      update_cache: yes
+
+  # run apt upgrade
+  - name: upgrade packages
+    ansible.builtin.apt:
+      upgrade: dist
+
+  # Install gnup and curl
+  - name: Install required packages (gnupg and curl)
+    apt:
+      name:
+        - gnupg
+        - curl
+      state: present
+
+  # Add mongoDB GPG key
+  - name: Add MongoDB GPG key
+    ansible.builtin.get_url:
+      url: https://www.mongodb.org/static/pgp/server-7.0.asc
+      dest: /tmp/mongodb-server-7.0.asc
+  # Convert GPG key to .gpg format
+  - name: Convert MongoDB GPG key to .gpg format
+    command: gpg -o "/usr/share/keyrings/mongodb-server-7.0.gpg" --dearmor /tmp/mongodb-server-7.0.asc
+    args:
+      creates: "/usr/share/keyrings/mongodb-server-7.0.gpg"
+
+  # Add MongoDB APT repository
+  - name: Add MongoDB APT repository
+    copy:
+      dest: "/etc/apt/sources.list.d/mongodb-org-7.0.list"
+      content: "deb [ arch=amd64,arm64 signed-by={{ gpg_key_path }} ] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/7.0 multiverse\n"
+
+  # run apt update to update packages
+  - name: update all packages
+    ansible.builtin.apt:
+      update_cache: yes
+
+  # Install mongo db
+  - name: Install MongoDB packages
+    apt:
+      name:
+        - mongodb-org={{ mongodb_version }}
+        - mongodb-org-database={{ mongodb_version }}
+        - mongodb-org-server={{ mongodb_version }}
+        - mongodb-mongosh={{ mongosh_version }}
+        - mongodb-org-mongos={{ mongodb_version }}
+        - mongodb-org-tools={{ mongodb_version }}
+      state: present
+
+  - name: Update mongod.conf to bind to all interfaces
+    # Changes bindIp from 127.0.0.1 to 0.0.0.0 to allow external access
+    ansible.builtin.replace:
+      path: /etc/mongod.conf
+      regexp: 'bindIp:\s*127\.0\.0\.1'
+      replace: 'bindIp: 0.0.0.0'
+
+  # Start monogodb and enable it
+  - name: Start MongoDB service
+    systemd:
+      name: mongod
+      state: started
+      enabled: true
