@@ -244,7 +244,13 @@ Check for syntax errors:
 Dry run of playbook:
 ```sudo ansible-playbook --check install_nginx_playbook.yml```
 
+## App setup
 
+- Add app group and DB group to the hosts file
+- Use the launch_db_playbook
+- Use the launch_app_playbook
+
+The launch app playbook currently doesn't seed the database so that needs to be done manually
 
 
 
