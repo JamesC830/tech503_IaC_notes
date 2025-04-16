@@ -236,7 +236,7 @@ In ansible.cfg file, add the below to the bottom:
 ```sudo ansible-playbook <playbook-name> --become```
 
 Example output:
-![alt text](image.png)
+![alt text](./Images/image.png)
 
 Check for syntax errors:
 ```ansible-playbook --syntax-check <playbook-filename>```
